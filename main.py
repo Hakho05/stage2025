@@ -3,7 +3,7 @@ import datetime, shutil, os, smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from dotenv import load_dotenv
-import customtkinter as ctk
+import customtkinter
 
 def appli():
     print(
@@ -26,7 +26,15 @@ def backup():
     os.makedirs(backup, exist_ok=True)
 
     #Copie du fichier .csv dans le dossier backup
-    shutil.copy2(file_csv, backup_file_name)
+    #shutil.copy2(file_csv, backup_file_name)
+    try:
+        shutil.copy2(file_csv, backup_file_name)
+        print("Backup terminé !")
+    except FileNotFoundError:
+        print(f"Erreur : le fichier {file_csv} est introuvable !")
+    except Exception as e:
+        print(f"Erreur lors du backup : {e}")
+
     #print(backup_file_name)
     print("Backup terminée !")
 
@@ -73,14 +81,13 @@ def envoie_mail():
 #                               Fenetre GUI                                            #
 ########################################################################################
 
-ctk.set_appearance_mode("dark")
-ctk.set_default_color_theme("blue")
+#app = customtkinter.CTk()
+#app.mainloop()
 
-root = ctk.CTk()
-root.title("Ma Fenêtre CustomTkinter")
-root.geometry("500x300")  # Taille de la fenêtre (largeur x hauteur)
+#app.title("my app")
+#app.geometry("900x500")
 
 #appli()
-#backup()
+backup()
 #envoie_mail()
 
