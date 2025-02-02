@@ -1,8 +1,9 @@
 from config import *
-import datetime, shutil, os
-import smtplib
+import datetime, shutil, os, smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+from dotenv import load_dotenv
+import customtkinter as ctk
 
 def appli():
     print(
@@ -30,26 +31,25 @@ def backup():
     print("Backup terminée !")
 
 def envoie_mail():
-    #Récupération des variables d'envrionnements
+    load_dotenv()
+
+    # Récupérer les variables
     mail_exp = os.getenv("MAIL_EXP")
     pwd_exp = os.getenv("PWD_EXP")
     admin = os.getenv("ADMIN")
 
-    print("MAIL_EXP:", os.getenv("MAIL_EXP"))
-    print("PWD_EXP:", os.getenv("PWD_EXP"))
-    print("ADMIN:", os.getenv("ADMIN"))
+    
 
     # Paramètres de l'email
     sujet = "Sujet de l'email"
     corps = "Voici le corps de l'email."
 
-    # Créer le message MIME
     message = MIMEMultipart()
     message["From"] = mail_exp
     message["To"] = admin
     message["Subject"] = sujet
 
-    # Ajouter le corps du message
+    # Ajouter du contenue du message
     message.attach(MIMEText(corps, "plain"))
 
     try:
@@ -60,16 +60,27 @@ def envoie_mail():
         # Se connecter avec les identifiants
         serveur_smtp.login(mail_exp, pwd_exp)  # Remplace par ton mot de passe
 
-        # Envoyer l'email
         serveur_smtp.sendmail(mail_exp, admin, message.as_string())
 
-        # Fermer la connexion SMTP
         serveur_smtp.quit()
 
         print("Email envoyé avec succès !")
     except Exception as e:
         print(f"Erreur lors de l'envoi de l'email : {e}")
 
+
+########################################################################################
+#                               Fenetre GUI                                            #
+########################################################################################
+
+ctk.set_appearance_mode("dark")
+ctk.set_default_color_theme("blue")
+
+root = ctk.CTk()
+root.title("Ma Fenêtre CustomTkinter")
+root.geometry("500x300")  # Taille de la fenêtre (largeur x hauteur)
+
 #appli()
 #backup()
-envoie_mail()
+#envoie_mail()
+
